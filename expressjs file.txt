@@ -1,8 +1,48 @@
+//asynchronous callback function
+const setTimeout = require('timers/promises').setTimeout;
+
+
+function setTimeoutAsync(delay, callback) {
+  setTimeout(delay)
+    .then(() => {
+           callback(null, 'This message will print after 4 seconds');
+    })
+    .catch((err) => {
+            callback(err);
+    });
+}
+
+setTimeoutAsync(4000, (err, data) => {
+  if (err) {
+        console.error(err);
+    return;
+  }
+    console.log(data);
+});
+
+//node events
+
+const EventEmitter = require('events');
+
+const eventEmitter = new EventEmitter();
+
+const fun1 = (msg) => {
+  console.log("Message from fun1: " + msg);
+};
+
+const fun2 = (msg) => {
+  console.log("Message from fun2: " + msg);
+};
+
+eventEmitter.on('myEvent', fun1);
+eventEmitter.prependListener('myEvent', fun2);
+
+console.log(eventEmitter.listeners('myEvent'));
+console.log(eventEmitter.listenerCount('myEvent'));
 
 
 
-
-//simple server
+//simple server using express
 const express = require('express');
 const app = express();
 const PORT = 8080;
@@ -64,3 +104,4 @@ app.post('/submit_signup', (req, res) => {
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
+
