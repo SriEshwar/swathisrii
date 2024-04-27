@@ -1,3 +1,21 @@
+
+
+
+
+//simple server
+const express = require('express');
+const app = express();
+const PORT = 8080;
+
+app.get('/', function (req, res) {
+  res.send('Hello World!');
+});
+
+app.listen(PORT, function () {
+  console.log(`Server running at: http://localhost:${PORT}/`);
+});
+
+//store the data frpm the form 
 <!DOCTYPE html>
 <html>
   <head>
@@ -17,8 +35,6 @@
     </form>
   </body>
 </html>
-
-
 
 
 
