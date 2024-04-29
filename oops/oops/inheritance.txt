@@ -1,0 +1,65 @@
+class Vehicle {
+  protected String color;
+
+  public Vehicle(String color) {
+    this.color = color;
+  }
+
+  public void drive() {
+    System.out.println("The vehicle is driving with color " + color);
+  }
+}
+
+class Car extends Vehicle {
+  private int numberOfDoors;
+
+  public Car(String color, int numberOfDoors) {
+    super(color);
+    this.numberOfDoors = numberOfDoors;
+  }
+
+  public void openDoor() {
+    System.out.println("The car door is opening");
+  }
+
+  @Override
+  public void drive() {
+    super.drive();
+    System.out.println("The car is driving with " + numberOfDoors + " doors");
+  }
+}
+
+class Motorcycle extends Vehicle {
+  private boolean hasSidecar;
+
+  public Motorcycle(String color, boolean hasSidecar) {
+    super(color);
+    this.hasSidecar = hasSidecar;
+  }
+
+  public void putHelmetOn() {
+    System.out.println("The motorcycle rider is putting on a helmet");
+  }
+
+  @Override
+  public void drive() {
+    super.drive();
+    if (hasSidecar) {
+      System.out.println("The motorcycle is driving with a sidecar");
+    } else {
+      System.out.println("The motorcycle is driving without a sidecar");
+    }
+  }
+}
+
+public class Main {
+  public static void main(String[] args) {
+    Car car = new Car("red", 4);
+    car.drive();
+    car.openDoor();
+
+    Motorcycle motorcycle = new Motorcycle("blue", false);
+    motorcycle.drive();
+    motorcycle.putHelmetOn();
+  }
+}
