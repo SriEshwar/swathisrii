@@ -1,0 +1,136 @@
+1.Exception handling 
+     
+     -to handle the runtime errors
+     -so that normal flow will be maintained 
+2.keywords used
+      -try,catch,throw,finally,throws
+  try-used to block a code that throw an exception
+  catch-used to handle the exception if it is thrown
+  throw-used to throw an exception explicitly.
+  throws-used to declare which exceptions can be thrown from a method
+  finally-used to excute the code after the try and catch block and executes whether exception handled or not
+3.exception
+      - an event that disrupts the normal flow of the program
+checked and unchecked exception
+4.Checked exceptions
+      - happens at compile time when the source code is transformed into an executable code. 
+5.Unchecked exceptions 
+      -happens at runtime when the executable program starts running.
+
+
+------------------------------------------------------------------------------
+6.checked exception
+-IOException
+-FileNotFoundException
+-SQLException
+-ClassNotFoundException
+-InterruptedException
+-InstantiationException
+
+7.unchecked exception
+-ArithmeticException
+-ArrayIndexOutOfBoundsException
+-ArrayStoreException
+-ClassCastException
+-IndexOutOfBoundsException
+-NullPointerException
+
+----------------------------------------------------------------------------
+8.why we go for finally block
+
+- used to put important codes such as clean up code e.g. closing the file or closing the connection .
+- The finally block executes whether exception handled or not.
+- A finally contains all the crucial statements regardless of the exception occurs or not
+9.reasons why the finally block is important
+-cleanup code
+-consistent state management:you might want to reset certain variables or release locks.
+-avoid code duplicates
+
+
+try {
+    // Code that might throw an exception
+} catch (Exception e) {
+    // Exception handling code
+} finally {
+    // Code that always executes whether an exception occurs or not
+}
+----------------------------------------------------------------------------------
+9.IOexception
+import java.io.IOException;
+
+public class Main {
+    public static void main(String[] args) {
+        String filePath = "employees.txt";
+
+        try {
+            Employee[] employees = FileReaderExample.readEmployees(filePath);
+
+            System.out.println("Employee details:");
+            for (Employee employee : employees) {
+                System.out.println(employee);
+            }
+        } catch (IOException e) {
+            System.out.println("Error: IOException!");
+            System.err.println("Failed to read employee data from file: " + filePath);
+            e.printStackTrace();
+        }
+    }
+}
+------------------------------------------------------------------------------
+10.ClassNotFoundException
+public class ClassNotFoundExceptionExample {
+    public static void main(String[] args) {
+        try {
+            Class.forName("com.myproject.MyInvisibleClass");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Error: Class not found!");
+            e.printStackTrace();
+        }
+    }
+}
+
+
+------------------------------------------------------------------------------
+11.Arithmetic exception
+public class ArithmeticExceptionExample {
+    public static void main(String[] args) {
+        int dividend = 10;
+        int divisor = 0;
+
+        try {
+            int result = dividend/divisor;
+            System.out.println("Result: " + result);
+        } catch (ArithmeticException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+----------------------------------------------------------------------------------
+12.ArrayIndexOutOfBound Exception
+public class ArrayIndexOutOfBoundsExceptionExample {
+    public static void main(String[] args) {
+        int[] numbers = {1, 2, 3};
+
+        try {
+            int element = numbers[3];
+            System.out.println("Element: " + element);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+-------------------------------------------------------------------------------
+nested try-catch blocks
+  try {
+    // Outer try block
+    try {
+        // Inner try block
+        // Code that might throw an exception
+        
+    } catch (Exception e) {
+        // Exception handling code for the inner try block
+        
+    }
+} catch (Exception e) {
+    // Exception handling code for the outer try block
+    
+}
