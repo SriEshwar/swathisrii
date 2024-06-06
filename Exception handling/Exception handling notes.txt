@@ -38,12 +38,11 @@ checked and unchecked exception
 ----------------------------------------------------------------------------
 8.why we go for finally block
 
-- used to put important codes such as clean up code e.g. closing the file or closing the connection .
+- used to clean up code e.g. closing the file or closing the connection .
 - The finally block executes whether exception handled or not.
-- A finally contains all the crucial statements regardless of the exception occurs or not
+- A finally contains all the crucial statements.
 9.reasons why the finally block is important
 -cleanup code
--consistent state management:you might want to reset certain variables or release locks.
 -avoid code duplicates
 
 
@@ -119,18 +118,3 @@ public class ArrayIndexOutOfBoundsExceptionExample {
             System.out.println("Error: " + e.getMessage());
         }
 -------------------------------------------------------------------------------
-nested try-catch blocks
-  try {
-    // Outer try block
-    try {
-        // Inner try block
-        // Code that might throw an exception
-        
-    } catch (Exception e) {
-        // Exception handling code for the inner try block
-        
-    }
-} catch (Exception e) {
-    // Exception handling code for the outer try block
-    
-}
