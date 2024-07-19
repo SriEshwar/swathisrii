@@ -1,0 +1,926 @@
+
+
+
+
+Write a PL/SQL procedure named insert_employee to insert employee data into the 
+EMPLOYEES table: 
+ Table structure: EMPLOYEES (EMP_ID NUMBER, EMP_NAME VARCHAR2(100), 
+DEPARTMENT VARCHAR2(50), SALARY NUMBER) 
+
+
+SQL> set serveroutput on
+
+SQL> CREATE TABLE EMP (
+  2      EMP_ID NUMBER PRIMARY KEY,
+  3      EMP_NAME VARCHAR2(100),
+  4      DEPARTMENT VARCHAR2(50),
+  5      SALARY NUMBER
+  6  );
+
+Table created.
+
+SQL> CREATE OR REPLACE PROCEDURE insert_employee (
+  2      p_emp_id      IN NUMBER,
+  3      p_emp_name    IN VARCHAR2,
+  4      p_department  IN VARCHAR2,
+  5      p_salary      IN NUMBER
+  6  ) IS
+  7  BEGIN
+  8      INSERT INTO EMP (EMP_ID, EMP_NAME, DEPARTMENT, SALARY)
+  9      VALUES (p_emp_id, p_emp_name, p_department, p_salary);
+ 10
+ 11         EXCEPTION
+ 14      WHEN OTHERS THEN
+ 15         
+ 16          ROLLBACK;
+ 17          RAISE;
+ 18  END insert_employee;
+ 19  /
+
+Procedure created.
+
+SQL> BEGIN
+  2  insert_employee(1, 'vishnu', 'data engineer', 50000);
+  3  insert_employee(2, 'adhithi', 'developer', 80000);
+  4  insert_employee(3, 'sri', 'manager', 20000);
+  5  insert_employee(4, 'swathi', 'system engineer', 70000);
+  6  insert_employee(5, 'viswa', 'trainee', 10000);
+  7  END;
+  8  /
+
+PL/SQL procedure successfully completed.
+
+SQL> SELECT * FROM EMP;
+
+    EMP_ID
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+DEPARTMENT                                             SALARY
+-------------------------------------------------- ----------
+         1
+vishnu
+data engineer                                           50000
+
+         2
+adhithi
+developer                                               80000
+
+    EMP_ID
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+DEPARTMENT                                             SALARY
+-------------------------------------------------- ----------
+
+         3
+sri
+manager                                                 20000
+
+         4
+swathi
+
+    EMP_ID
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+DEPARTMENT                                             SALARY
+-------------------------------------------------- ----------
+system engineer                                         70000
+
+         5
+viswa
+trainee                                                 10000
+
+__________________________________________________________________________________________________________________________s
+
+
+
+2)Write a PL/SQL procedure named update_salary to update an employee's salary based 
+on their current salary: 
+ If the current salary is less than 5000, increase it by 10%. 
+ If the current salary is between 5000 and 10000, increase it by 7.5%. 
+ If the current salary is more than 10000, increase it by 5%.
+
+
+
+
+SQL> CREATE OR REPLACE PROCEDURE update_salary (
+  2      p_emp_id IN EMP.EMP_ID%TYPE
+  3  ) IS
+  4      v_current_salary EMP.SALARY%TYPE;
+  5  BEGIN
+  6      
+  7      SELECT SALARY INTO v_current_salary
+  8      FROM EMP
+  9      WHERE EMP_ID = p_emp_id;
+ 10
+ 11      
+ 12      IF v_current_salary < 5000 THEN
+ 13          UPDATE EMP
+ 14          SET SALARY = SALARY * 1.10
+ 15          WHERE EMP_ID = p_emp_id;
+ 16      ELSIF v_current_salary BETWEEN 5000 AND 10000 THEN
+ 17          UPDATE EMP
+ 18          SET SALARY = SALARY * 1.075
+ 19          WHERE EMP_ID = p_emp_id;
+ 20      ELSIF v_current_salary > 10000 THEN
+ 21          UPDATE EMP
+ 22          SET SALARY = SALARY * 1.05
+ 23          WHERE EMP_ID = p_emp_id;
+ 24      END IF;
+ 25
+ 26       28  EXCEPTION
+ 29      WHEN NO_DATA_FOUND THEN
+ 30          DBMS_OUTPUT.PUT_LINE('Employee with ID ' || p_emp_id || ' does not exist.');
+ 31      WHEN OTHERS THEN
+ 32           33          ROLLBACK;
+ 34          RAISE;
+ 35  END update_salary;
+ 36  /
+
+Procedure created.
+
+SQL> BEGIN
+  2      update_salary(1);
+  3      update_salary(2);
+  4      update_salary(3);
+  5       update_salary(4);
+  6      update_salary(5);
+  7
+  8  END;
+  9  /
+
+PL/SQL procedure successfully completed.
+
+SQL> SELECT * FROM EMP;
+
+    EMP_ID
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+DEPARTMENT                                             SALARY
+-------------------------------------------------- ----------
+         1
+vishnu
+data engineer                                           52500
+
+         2
+adhithi
+developer                                               84000
+
+    EMP_ID
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+DEPARTMENT                                             SALARY
+-------------------------------------------------- ----------
+
+         3
+sri
+manager                                                 21000
+
+         4
+swathi
+
+    EMP_ID
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+DEPARTMENT                                             SALARY
+-------------------------------------------------- ----------
+system engineer                                         73500
+
+         5
+viswa
+trainee                                                 10750
+
+
+
+_____________________________________________________________________________________________________________________________________
+
+
+3) Use a Cursor to Display Employee Names 
+Write a PL/SQL block using a cursor to fetch and display all employee names from 
+the EMPLOYEES table.
+
+SQL> DECLARE
+  2
+  3      CURSOR emp_cursor IS
+  4          SELECT EMP_NAME FROM EMP;
+  5
+  6
+  7      v_emp_name EMP.EMP_NAME%TYPE;
+  8  BEGIN
+  9
+ 10      OPEN emp_cursor;
+ 11
+ 12
+ 13      LOOP
+ 14
+ 15          FETCH emp_cursor INTO v_emp_name;
+ 16
+ 17
+ 18          EXIT WHEN emp_cursor%NOTFOUND;
+ 19
+ 20
+ 21          DBMS_OUTPUT.PUT_LINE(v_emp_name);
+ 22      END LOOP;
+ 23
+ 24
+ 25      CLOSE emp_cursor;
+ 26  END;
+ 27
+ 28
+ 29  /
+vishnu
+adhithi
+sri
+swathi
+viswa
+
+PL/SQL procedure successfully completed.
+____________________________________________________________________________________________________________________________________
+
+ 4)Create a View for Employees with High Salary 
+Write a SQL statement to create a view named high_salary_employees that displays 
+employees earning more than 10000. 
+
+SQL> CREATE VIEW high_salary_employees AS
+  2  SELECT EMP_ID, EMP_NAME, DEPARTMENT, SALARY
+  3  FROM EMP
+  4  WHERE SALARY > 10000;
+
+View created.
+
+SQL> SELECT * FROM high_salary_employees;
+
+    EMP_ID
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+DEPARTMENT                                             SALARY
+-------------------------------------------------- ----------
+         1
+vishnu
+data engineer                                           52500
+
+         2
+adhithi
+developer                                               84000
+
+    EMP_ID
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+DEPARTMENT                                             SALARY
+-------------------------------------------------- ----------
+
+         3
+sri
+manager                                                 21000
+
+         4
+swathi
+
+    EMP_ID
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+DEPARTMENT                                             SALARY
+-------------------------------------------------- ----------
+system engineer                                         73500
+
+         5
+viswa
+trainee                                                 10750
+
+
+____________________________________________________________________________________________________________________________
+
+
+5)Create a Function to Calculate Bonus 
+Write a PL/SQL function named calculate_bonus to calculate the bonus based on an 
+employee's salary: 
+ Employees earning less than 5000 get a bonus of 10% of their salary. 
+ Employees earning between 5000 and 10000 get a bonus of 7.5% of their salary. 
+ Employees earning more than 10000 get a bonus of 5% of their salary.
+
+SQL> CREATE OR REPLACE FUNCTION calculate_bonus (
+  2      p_emp_id IN EMP.EMP_ID%TYPE
+  3  ) RETURN NUMBER IS
+  4      v_salary EMP.SALARY%TYPE;
+  5      v_bonus NUMBER;
+  6  BEGIN
+  7           BEGIN
+  9          SELECT SALARY INTO v_salary
+ 10          FROM EMP
+ 11          WHERE EMP_ID = p_emp_id;
+ 12      EXCEPTION
+ 13          WHEN NO_DATA_FOUND THEN
+ 14              DBMS_OUTPUT.PUT_LINE('Employee with ID ' || p_emp_id || ' does not exist.');
+ 15              RETURN NULL;
+ 16      END;
+ 17
+ 18           IF v_salary < 5000 THEN
+ 20          v_bonus := v_salary * 0.10;
+ 21      ELSIF v_salary BETWEEN 5000 AND 10000 THEN
+ 22          v_bonus := v_salary * 0.075;
+ 23      ELSE
+ 24          v_bonus := v_salary * 0.05;
+ 25      END IF;
+ 26
+ 27           RETURN v_bonus;
+ 29  EXCEPTION
+ 30      WHEN OTHERS THEN
+ 31            ROLLBACK;
+ 33          RAISE;
+ 34  END calculate_bonus;
+ 35  /
+
+Function created.
+
+SQL> DECLARE
+  2      v_bonus NUMBER;
+  3  BEGIN
+  4             v_bonus := calculate_bonus(1);
+  6      DBMS_OUTPUT.PUT_LINE('Bonus for employee 1: ' || v_bonus);
+  7
+  8            v_bonus := calculate_bonus(2);
+ 10      DBMS_OUTPUT.PUT_LINE('Bonus for employee 2: ' || v_bonus);
+ 11
+ 12             v_bonus := calculate_bonus(3);
+ 14      DBMS_OUTPUT.PUT_LINE('Bonus for employee 3: ' || v_bonus);
+ 15  END;
+ 16  /
+Bonus for employee 1: 2625
+Bonus for employee 2: 4200
+Bonus for employee 3: 1050
+
+PL/SQL procedure successfully completed.
+
+_______________________________________________________________________________________________________________________________________
+
+6) Create a Trigger to Log Employee Insertions 
+Write a PL/SQL trigger named log_employee_insert to log whenever an employee is 
+inserted into the EMPLOYEES table.
+
+SQL> CREATE TABLE EMPLOYEE_INSERT_LOG (
+  2      LOG_ID NUMBER PRIMARY KEY,
+  3      EMP_ID NUMBER,
+  4      EMP_NAME VARCHAR2(100),
+  5      DEPARTMENT VARCHAR2(50),
+  6      SALARY NUMBER,
+  7      INSERTED_AT TIMESTAMP
+  8  );
+
+Table created.
+
+SQL>
+SQL> CREATE OR REPLACE TRIGGER log_employee_insert
+  2  AFTER INSERT ON EMP
+  3  FOR EACH ROW
+  4  DECLARE
+  5      v_log_id NUMBER;
+  6  BEGIN
+  7      
+  8      SELECT NVL(MAX(LOG_ID), 0) + 1 INTO v_log_id FROM EMPLOYEE_INSERT_LOG;
+  9
+ 10     
+ 11      INSERT INTO EMPLOYEE_INSERT_LOG (LOG_ID, EMP_ID, EMP_NAME, DEPARTMENT, SALARY, INSERTED_AT)
+ 12      VALUES (v_log_id, :NEW.EMP_ID, :NEW.EMP_NAME, :NEW.DEPARTMENT, :NEW.SALARY, SYSTIMESTAMP);
+ 13  END;
+ 14  /
+
+Trigger created.
+
+SQL> INSERT INTO EMP (EMP_ID, EMP_NAME, DEPARTMENT, SALARY) VALUES (6, 'tinu', 'Finance', 15000);
+
+1 row created.
+
+SQL> SELECT * FROM EMPLOYEE_INSERT_LOG;
+
+    LOG_ID     EMP_ID
+---------- ----------
+EMP_NAME
+--------------------------------------------------------------------------------
+DEPARTMENT                                             SALARY
+-------------------------------------------------- ----------
+INSERTED_AT
+---------------------------------------------------------------------------
+         1          6
+tinu
+Finance                                                 15000
+19-JUL-24 12.23.02.447000 PM
+_____________________________________________________________________________________________________________________________________________________
+
+7):Consider the  orders and order_items tables from the sample database. 
+A) Create a view that returns the sales revenues by customers. The values of the credit 
+column are 5% of the total sales revenues. 
+B) Write the PL/SQL query to develop an anonymous block which: 
+1. 
+2. 
+Reset the credit limits of all customers to zero. 
+Fetch customers sorted by sales in descending order and give them new credit limits 
+from a budget of 1 million.
+
+
+SQL> CREATE TABLE orders (
+  2      order_id NUMBER PRIMARY KEY,
+  3      customer_id NUMBER,
+  4      status VARCHAR2(20),
+  5      saleman_id NUMBER,
+  6      order_date DATE
+  7  );
+
+Table created.
+
+SQL> CREATE TABLE order_items (
+  2      order_id NUMBER,
+  3      item_id NUMBER,
+  4      product_id NUMBER,
+  5      quantity NUMBER,
+  6      unit_price NUMBER,
+  7      PRIMARY KEY (order_id, item_id)
+  8  );
+
+Table created.
+
+SQL> CREATE TABLE customers (
+  2      customer_id NUMBER PRIMARY KEY,
+  3      credit_limit NUMBER
+  4  );
+
+Table created.
+
+SQL> 
+SQL> INSERT INTO orders (order_id, customer_id, status, saleman_id, order_date) VALUES (1, 101, 'Shipped', 1001, TO_DATE('2023-01-01', 'YYYY-MM-DD'));
+
+1 row created.
+
+SQL> INSERT INTO orders (order_id, customer_id, status, saleman_id, order_date) VALUES (2, 102, 'Shipped', 1002, TO_DATE('2023-01-02', 'YYYY-MM-DD'));
+
+1 row created.
+
+
+SQL> INSERT INTO order_items (order_id, item_id, product_id, quantity, unit_price) VALUES (1, 1, 201, 10, 100);
+
+1 row created.
+
+SQL> INSERT INTO order_items (order_id, item_id, product_id, quantity, unit_price) VALUES (1, 2, 202, 5, 200);
+
+1 row created.
+
+SQL> INSERT INTO order_items (order_id, item_id, product_id, quantity, unit_price) VALUES (2, 3, 203, 20, 50);
+
+1 row created.
+
+
+SQL> INSERT INTO customers (customer_id, credit_limit) VALUES (101, 1000);
+
+1 row created.
+
+SQL> INSERT INTO customers (customer_id, credit_limit) VALUES (102, 2000);
+
+1 row created.
+
+SQL> CREATE OR REPLACE VIEW customer_sales_revenues AS
+  2  SELECT
+  3      o.customer_id,
+  4      SUM(oi.quantity * oi.unit_price) AS total_sales_revenue,
+  5      SUM(oi.quantity * oi.unit_price) * 0.05 AS credit
+  6  FROM
+  7      orders o
+  8  JOIN
+  9      order_items oi ON o.order_id = oi.order_id
+ 10  GROUP BY
+ 11      o.customer_id;
+
+View created.
+
+SQL> DECLARE
+  2      v_total_budget NUMBER := 1000000;  
+  3      v_remaining_budget NUMBER := 1000000;  
+  4      v_credit_limit NUMBER;
+  5      CURSOR c_customers IS
+  6          SELECT
+  7              customer_id,
+  8              total_sales_revenue
+  9          FROM
+ 10              customer_sales_revenues
+ 11          ORDER BY
+ 12              total_sales_revenue DESC;
+ 13  BEGIN
+ 14      
+ 15      UPDATE customers
+ 16      SET credit_limit = 0;
+ 17
+ 18      
+ 19      FOR r_customer IN c_customers LOOP
+ 20          IF v_remaining_budget > 0 THEN
+ 21              v_credit_limit := r_customer.total_sales_revenue * 0.05;
+ 22              IF v_credit_limit > v_remaining_budget THEN
+ 23                  v_credit_limit := v_remaining_budget;
+ 24              END IF;
+ 25              v_remaining_budget := v_remaining_budget - v_credit_limit;
+ 26
+ 27              UPDATE customers
+ 28              SET credit_limit = v_credit_limit
+ 29              WHERE customer_id = r_customer.customer_id;
+ 30          ELSE
+ 31              EXIT;  
+ 32          END IF;
+ 33      END LOOP;
+ 34
+ 35     
+ 36      DBMS_OUTPUT.PUT_LINE('Remaining Budget: ' || v_remaining_budget);
+ 37  END;
+ 38  /
+Remaining Budget: 999850
+
+PL/SQL procedure successfully completed.
+
+SQL> SELECT * FROM customer_sales_revenues;
+
+CUSTOMER_ID TOTAL_SALES_REVENUE     CREDIT
+----------- ------------------- ----------
+        101                2000        100
+        102                1000         50
+
+_____________________________________________________________________________________________________________________________________________________
+
+
+8):Write a program in PL/SQL to show the uses of implicit cursor without using 
+any attribute. 
+Table: employees 
+employee_id     integer 
+first_name      varchar(25) 
+last_name       varchar(25) 
+email           varchar(25) 
+phone_number    varchar(15) 
+hire_date       date 
+job_id          varchar(25) 
+salary          integer 
+commission_pct  decimal(5,2) 
+manager_id      integer 
+department_id   integer
+
+
+
+SQL> CREATE TABLE o_employees (
+  2      employee_id INTEGER PRIMARY KEY,
+  3      first_name VARCHAR2(25),
+  4      last_name VARCHAR2(25),
+  5      email VARCHAR2(25),
+  6      phone_number VARCHAR2(15),
+  7      hire_date DATE,
+  8      job_id VARCHAR2(25),
+  9      salary INTEGER,
+ 10      commission_pct DECIMAL(5,2),
+ 11      manager_id INTEGER,
+ 12      department_id INTEGER
+ 13  );
+
+Table created.
+
+SQL> INSERT INTO o_employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id)
+  2  VALUES (1, 'sri', 'sowndarya', 'sri@mail.com', '123-456-7890', TO_DATE('2020-01-01', 'YYYY-MM-DD'), 'IT_PROG', 60000, 0.10, 100, 10);
+
+1 row created.
+
+SQL>
+SQL> INSERT INTO o_employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id)
+  2  VALUES (2, 'viswa', 'ram', 'swa@mail.com', '234-567-8901', TO_DATE('2019-06-15', 'YYYY-MM-DD'), 'HR_REP', 50000, NULL, 101, 20);
+
+1 row created.
+
+
+SQL>
+SQL> DECLARE
+  2      v_employee_id o_employees.employee_id%TYPE;
+  3      v_first_name o_employees.first_name%TYPE;
+  4      v_last_name o_employees.last_name%TYPE;
+  5      v_email o_employees.email%TYPE;
+  6      v_phone_number o_employees.phone_number%TYPE;
+  7      v_hire_date o_employees.hire_date%TYPE;
+  8      v_job_id o_employees.job_id%TYPE;
+  9      v_salary o_employees.salary%TYPE;
+ 10      v_commission_pct o_employees.commission_pct%TYPE;
+ 11      v_manager_id o_employees.manager_id%TYPE;
+ 12      v_department_id o_employees.department_id%TYPE;
+ 13  BEGIN
+ 14      FOR r_employee IN (SELECT * FROM o_employees) LOOP
+ 15          v_employee_id := r_employee.employee_id;
+ 16          v_first_name := r_employee.first_name;
+ 17          v_last_name := r_employee.last_name;
+ 18          v_email := r_employee.email;
+ 19          v_phone_number := r_employee.phone_number;
+ 20          v_hire_date := r_employee.hire_date;
+ 21          v_job_id := r_employee.job_id;
+ 22          v_salary := r_employee.salary;
+ 23          v_commission_pct := NVL(r_employee.commission_pct, 0);
+ 24          v_manager_id := NVL(r_employee.manager_id, 0);
+ 25          v_department_id := r_employee.department_id;
+ 26
+ 27          DBMS_OUTPUT.PUT_LINE('Employee ID: ' || v_employee_id);
+ 28          DBMS_OUTPUT.PUT_LINE('Name: ' || v_first_name || ' ' || v_last_name);
+ 29          DBMS_OUTPUT.PUT_LINE('Email: ' || v_email);
+ 30          DBMS_OUTPUT.PUT_LINE('Phone: ' || v_phone_number);
+ 31          DBMS_OUTPUT.PUT_LINE('Hire Date: ' || v_hire_date);
+ 32          DBMS_OUTPUT.PUT_LINE('Job ID: ' || v_job_id);
+ 33          DBMS_OUTPUT.PUT_LINE('Salary: ' || v_salary);
+ 34          DBMS_OUTPUT.PUT_LINE('Commission Pct: ' || v_commission_pct);
+ 35          DBMS_OUTPUT.PUT_LINE('Manager ID: ' || v_manager_id);
+ 36          DBMS_OUTPUT.PUT_LINE('Department ID: ' || v_department_id);
+ 37          DBMS_OUTPUT.PUT_LINE('-------------------------');
+ 38      END LOOP;
+ 39  END;
+ 40  /
+Employee ID: 1
+Name: sri sowndarya
+Email: sri@mail.com
+Phone: 123-456-7890
+Hire Date: 01-JAN-20
+Job ID: IT_PROG
+Salary: 60000
+Commission Pct: .1
+Manager ID: 100
+Department ID: 10
+-------------------------
+Employee ID: 2
+Name: viswa ram
+Email: swa@mail.com
+Phone: 234-567-8901
+Hire Date: 15-JUN-19
+Job ID: HR_REP
+Salary: 50000
+Commission Pct: 0
+Manager ID: 101
+Department ID: 20
+-------------------------
+
+PL/SQL procedure successfully completed.
+
+_______________________________________________________________________________________________________________________________________________________
+
+
+
+9):Write a program in PL/SQL to create a cursor displays the name and salary of 
+each employee in the EMPLOYEES table whose salary is less than that specified by a passed
+in parameter value. 
+Table: employees 
+employee_id     integer 
+first_name      varchar(25) 
+last_name       varchar(25) 
+email           varchar(25) 
+phone_number    varchar(15) 
+hire_date       date 
+job_id          varchar(25) 
+salary          integer 
+commission_pct  decimal(5,2) 
+manager_id      integer 
+department_id   integer
+SQL> DECLARE
+  2      CURSOR emp_cursor (p_salary_threshold INTEGER) IS
+  3          SELECT first_name, last_name, salary
+  4          FROM o_employees
+  5          WHERE salary < p_salary_threshold;
+  6
+  7      v_first_name o_employees.first_name%TYPE;
+  8      v_last_name o_employees.last_name%TYPE;
+  9      v_salary o_employees.salary%TYPE;
+ 10      v_salary_threshold INTEGER := 55000; 
+ 11
+ 12  BEGIN
+ 13      OPEN emp_cursor(v_salary_threshold);
+ 14      LOOP
+ 15          FETCH emp_cursor INTO v_first_name, v_last_name, v_salary;
+ 16          EXIT WHEN emp_cursor%NOTFOUND;
+ 17          DBMS_OUTPUT.PUT_LINE('Name: ' || v_first_name || ' ' || v_last_name || ', Salary: ' || v_salary);
+ 18      END LOOP;
+ 19      CLOSE emp_cursor;
+ 20  END;
+ 21  /
+Name: viswa ram, Salary: 50000
+
+PL/SQL procedure successfully completed.
+
+_____________________________________________________________________________________________________________________________________________________________
+
+
+
+
+10)Write a code in PL/SQL to create a trigger that checks for duplicate values in a 
+specific column and raises an exception if found.
+
+SQL> CREATE OR REPLACE TRIGGER check_duplicate_email
+  2  BEFORE INSERT OR UPDATE ON o_employees
+  3  FOR EACH ROW
+  4  DECLARE
+  5      v_count INTEGER;
+  6  BEGIN
+  7      
+  8      SELECT COUNT(*)
+  9      INTO v_count
+ 10      FROM o_employees
+ 11      WHERE email = :NEW.email
+ 12      AND employee_id != :NEW.employee_id; 
+ 13
+ 14      IF v_count > 0 THEN
+ 15          RAISE_APPLICATION_ERROR(-20001, 'Duplicate email found: ' || :NEW.email);
+ 16      END IF;
+ 17  END;
+ 18  /
+
+Trigger created.
+
+SQL> INSERT INTO o_employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id)
+  2  VALUES (3, 'sowmiya', 'r', 'sowmiya.r@mail.com', '345-678-9012', TO_DATE('2018-03-20', 'YYYY-MM-DD'), 'FIN_ANALYST', 45000, NULL, 102, 30);
+
+1 row created.
+
+SQL> INSERT INTO o_employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id)
+  2  VALUES (4, 'kowsy', 's', 'swa@mail.com', '456-789-0123', TO_DATE('2017-10-15', 'YYYY-MM-DD'), 'SALES_REP', 70000, 0.05, 103, 40);
+INSERT INTO o_employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id)
+            *
+ERROR at line 1:
+ORA-20001: Duplicate email found: swa@mail.com
+ORA-06512: at "SYSTEM.CHECK_DUPLICATE_EMAIL", line 12
+ORA-04088: error during execution of trigger 'SYSTEM.CHECK_DUPLICATE_EMAIL'
+
+
+________________________________________________________________________________________________________________________________________________________
+
+11)Write a PL/SQL procedure for selecting some records from the database 
+using some parameters as filters. 
+ Consider that we are fetching details of employees from ib_employee table where 
+salary is a parameter for filter. 
+
+
+
+SQL> CREATE TABLE ib_employee (
+  2      employee_id INTEGER PRIMARY KEY,
+  3      first_name VARCHAR2(25),
+  4      last_name VARCHAR2(25),
+  5      email VARCHAR2(25),
+  6      phone_number VARCHAR2(15),
+  7      hire_date DATE,
+  8      job_id VARCHAR2(25),
+  9      salary INTEGER,
+ 10      commission_pct DECIMAL(5,2),
+ 11      manager_id INTEGER,
+ 12      department_id INTEGER
+ 13  );
+
+Table created.
+
+
+
+SQL> INSERT INTO ib_employee (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id)
+  2  VALUES (1, 'priya', 'ram', 'priya.ram@example.com', '555-5678', TO_DATE('2022-06-23', 'YYYY-MM-DD'), 'HR_REP', 60000, 0.07, 1, 20);
+
+1 row created.
+
+SQL>
+SQL> INSERT INTO ib_employee (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id)
+  2  VALUES (2, 'ganesh', 'p', 'ganesh.p@example.com', '555-8765', TO_DATE('2021-03-12', 'YYYY-MM-DD'), 'IT_PROG', 85000, 0.10, 1, 30);
+
+1 row created.
+
+SQL> CREATE OR REPLACE PROCEDURE get_employees_by_salary(p_salary_threshold IN INTEGER) AS
+  2  BEGIN
+  3      FOR r_employee IN (
+  4          SELECT employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary
+  5          FROM ib_employee
+  6          WHERE salary > p_salary_threshold
+  7      ) LOOP
+  8          DBMS_OUTPUT.PUT_LINE('Employee ID: ' || r_employee.employee_id);
+  9          DBMS_OUTPUT.PUT_LINE('Name: ' || r_employee.first_name || ' ' || r_employee.last_name);
+ 10          DBMS_OUTPUT.PUT_LINE('Email: ' || r_employee.email);
+ 11          DBMS_OUTPUT.PUT_LINE('Phone: ' || r_employee.phone_number);
+ 12          DBMS_OUTPUT.PUT_LINE('Hire Date: ' || r_employee.hire_date);
+ 13          DBMS_OUTPUT.PUT_LINE('Job ID: ' || r_employee.job_id);
+ 14          DBMS_OUTPUT.PUT_LINE('Salary: ' || r_employee.salary);
+ 15          DBMS_OUTPUT.PUT_LINE('-------------------------');
+ 16      END LOOP;
+ 17  EXCEPTION
+ 18      WHEN NO_DATA_FOUND THEN
+ 19          DBMS_OUTPUT.PUT_LINE('No employees found with salary greater than ' || p_salary_threshold);
+ 20  END;
+ 21  /
+
+Procedure created.
+
+SQL> BEGIN
+  2      get_employees_by_salary(50000); 
+  3  END;
+  4  /
+Employee ID: 1
+Name: priya ram
+Email: priya.ram@example.com
+Phone: 555-5678
+Hire Date: 23-JUN-22
+Job ID: HR_REP
+Salary: 60000
+-------------------------
+Employee ID: 2
+Name: ganesh p
+Email: ganesh.p@example.com
+Phone: 555-8765
+Hire Date: 12-MAR-21
+Job ID: IT_PROG
+Salary: 85000
+-------------------------
+
+PL/SQL procedure successfully completed.
+
+_____________________________________________________________________________________________________________________________________________
+
+
+12):Write PL/SQL code block to increment the employee’s salary by 1000 
+whose employee_id is 102 from the given table below. 
+
+
+SQL>
+SQL> CREATE TABLE employees_salary (
+  2      employee_id INTEGER PRIMARY KEY,
+  3      first_name VARCHAR2(25),
+  4      last_name VARCHAR2(25),
+  5      email_id VARCHAR2(25),
+  6      phone_number VARCHAR2(15),
+  7      join_date DATE,
+  8      job_id VARCHAR2(25),
+  9      salary NUMBER(10, 2)
+ 10  );
+
+Table created.
+
+SQL> INSERT INTO employees_salary (employee_id, first_name, last_name, email_id, phone_number, join_date, job_id, salary)
+  2  VALUES (100, 'ABC', 'DEF', 'abef', '9876543210', TO_DATE('2020-06-06', 'YYYY-MM-DD'), 'AD_PRESS', 24000.00);
+
+1 row created.
+
+SQL>
+SQL> INSERT INTO employees_salary (employee_id, first_name, last_name, email_id, phone_number, join_date, job_id, salary)
+  2  VALUES (101, 'GHI', 'JKL', 'ghkl', '9876543211', TO_DATE('2021-02-08', 'YYYY-MM-DD'), 'AD_VP', 17000.00);
+
+1 row created.
+
+SQL>
+SQL> INSERT INTO employees_salary (employee_id, first_name, last_name, email_id, phone_number, join_date, job_id, salary)
+  2  VALUES (102, 'MNO', 'PQR', 'mnqr', '9876543212', TO_DATE('2016-05-14', 'YYYY-MM-DD'), 'AD_VP', 17000.00);
+
+1 row created.
+
+SQL>
+SQL> INSERT INTO employees_salary (employee_id, first_name, last_name, email_id, phone_number, join_date, job_id, salary)
+  2  VALUES (103, 'STU', 'VWX', 'stwx', '9876543213', TO_DATE('2019-06-24', 'YYYY-MM-DD'), 'IT_PROG', 9000.00);
+
+1 row created.
+
+
+
+
+
+
+SQL> BEGIN
+  2      
+  3      DECLARE
+  4          v_current_salary employees_salary.salary%TYPE;
+  5      BEGIN
+  6         
+  7          SELECT salary
+  8          INTO v_current_salary
+  9          FROM employees_salary
+ 10          WHERE employee_id = 102;
+ 11
+ 12         
+ 13          UPDATE employees_salary
+ 14          SET salary = v_current_salary + 1000
+ 15          WHERE employee_id = 102;
+ 16
+ 17          
+ 18          COMMIT;
+ 19
+ 20       
+ 21          DBMS_OUTPUT.PUT_LINE('Updated salary for employee_id 102: ' || (v_current_salary + 1000));
+ 22      EXCEPTION
+ 23          WHEN NO_DATA_FOUND THEN
+ 24              DBMS_OUTPUT.PUT_LINE('Employee with employee_id 102 not found.');
+ 25          WHEN OTHERS THEN
+ 26              DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+ 27      END;
+ 28  END;
+ 29  /
+Updated salary for employee_id 102: 18000
+
+PL/SQL procedure successfully completed.
+
+
+
+SQL> SELECT employee_id, salary FROM employees_salary WHERE employee_id = 102;
+
+EMPLOYEE_ID     SALARY
+----------- ----------
+        102      18000
+
