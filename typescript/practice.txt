@@ -1,0 +1,107 @@
+//types
+// Number
+let age: number = 30;
+
+// String
+let name: string = "John Doe";
+
+// Boolean
+let isActive: boolean = true;
+
+// Array
+let numbers: number[] = [1, 2, 3, 4, 5];
+let names: string[] = ["Alice", "Bob", "Charlie"];
+
+// Tuple
+let person: [string, number] = ["Alice", 30];
+
+// Enum
+enum Color {
+    Red,
+    Green,
+    Blue
+}
+let myColor: Color = Color.Green;
+console.log(myColor); // Output: 1
+
+//functions
+// Function with parameters and return type
+function greet(name: string): string {
+    return `Hello, ${name}!`;
+}
+
+console.log(greet("Alice")); // Output: Hello, Alice!
+
+// Function with optional parameters
+function greetOptional(name: string, age?: number): string {
+    if (age) {
+        return `Hello, ${name}. You are ${age} years old.`;
+    } else {
+        return `Hello, ${name}.`;
+    }
+}
+
+console.log(greetOptional("Bob")); // Output: Hello, Bob.
+console.log(greetOptional("Charlie", 25)); // Output: Hello, Charlie. You are 25 years old.
+
+//set
+// Create a Set
+const numberSet: Set<number> = new Set<number>();
+
+// Add values to the Set
+numberSet.add(1);
+numberSet.add(2);
+numberSet.add(3);
+numberSet.add(2); // Duplicate values are ignored
+
+// Check if a value exists
+console.log(numberSet.has(2)); // Output: true
+console.log(numberSet.has(4)); // Output: false
+
+// Remove a value from the Set
+numberSet.delete(2);
+
+// Get the size of the Set
+console.log(numberSet.size); // Output: 2
+
+// Iterate over the Set
+numberSet.forEach(value => {
+    console.log(value); // Output: 1, 3
+});
+
+// Convert Set to an array
+const numberArray: number[] = Array.from(numberSet);
+console.log(numberArray); // Output: [1, 3]
+
+//map
+// Create a Map
+const numberMap: Map<string, number> = new Map<string, number>();
+
+// Set key-value pairs
+numberMap.set('one', 1);
+numberMap.set('two', 2);
+numberMap.set('three', 3);
+
+// Get a value by key
+console.log(numberMap.get('two')); // Output: 2
+
+// Check if a key exists
+console.log(numberMap.has('three')); // Output: true
+console.log(numberMap.has('four')); // Output: false
+
+// Remove a key-value pair
+numberMap.delete('one');
+
+// Get the size of the Map
+console.log(numberMap.size); // Output: 2
+
+// Iterate over the Map
+numberMap.forEach((value, key) => {
+    console.log(`${key}: ${value}`); // Output: two: 2, three: 3
+});
+
+// Convert Map to an array of key-value pairs
+const mapArray: [string, number][] = Array.from(numberMap);
+console.log(mapArray); // Output: [['two', 2], ['three', 3]]
+
+
