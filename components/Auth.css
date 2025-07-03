@@ -1,0 +1,91 @@
+/* Auth.css */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #4f46e5, #60a5fa);
+    color: white;
+    padding: 2rem;
+  }
+  
+  .auth-hero {
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Darker background for form */
+    padding: 2rem;
+    border-radius: 10px;
+  }
+  
+  .auth-hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .auth-hero p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .auth-input {
+    padding: 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+  }
+  
+  .auth-input:focus {
+    outline: none;
+    border: 1px solid #60a5fa;
+  }
+  
+  .cta-button {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #10b981;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cta-button:hover {
+    background-color: #059669;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 0.9rem;
+  }
+  
+  @media (max-width: 768px) {
+    .auth-hero h1 {
+      font-size: 2rem;
+    }
+  
+    .auth-hero p {
+      font-size: 1rem;
+    }
+  
+    .auth-form {
+      gap: 0.8rem;
+    }
+  
+    .auth-input {
+      padding: 0.8rem;
+    }
+  
+    .cta-button {
+      padding: 0.7rem 1.5rem;
+    }
+  }
+  

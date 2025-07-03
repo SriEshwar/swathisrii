@@ -1,0 +1,94 @@
+/* OrderHistory.css - Styles for order history page */
+.order-history {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.order-history h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #333;
+}
+
+.order-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background-color: #f9f9f9;
+}
+
+.order-card h3 {
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.order-card p {
+  margin: 0.25rem 0;
+  color: #555;
+}
+
+.order-card ul {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 0.5rem;
+}
+
+.order-card ul li {
+  padding: 0.25rem 0;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.status {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.status.processing {
+  color: orange;
+}
+
+.status.shipped {
+  color: blue;
+}
+
+.status.delivered {
+  color: green;
+}
+
+.order-card button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.order-card button:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .order-history {
+    padding: 1rem;
+  }
+
+  .order-card {
+    padding: 1rem;
+  }
+
+  .order-card h3 {
+    font-size: 1.2rem;
+  }
+
+  .order-card button {
+    width: 100%;
+  }
+}
+/* Responsive adjustments for smaller screens */
+/* OrderHistory.css - Styles for order history page */
